@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "compression-challenge-search"
+version = "0.1.0"
+description = "Search and evaluation pipeline for the compression lab challenge submissions"
+requires-python = ">=3.11"
+dependencies = ["numpy", "numba", "numcodecs", "scipy", "numcodecs-combinators", "numcodecs-clip", "numcodecs-chunked", "numcodecs-grid-int", "numcodecs-eb-quantize", "numcodecs-context-mixing", "numcodecs-interp-ctx", "numcodecs-lon-gradient", "numcodecs-abs-or-rel", "numcodecs-replace", "numcodecs-zero", "numcodecs-mask", "numcodecs-replace", "numcodecs-pw-ratio"]
+
+[tool.setuptools]
+py-modules = []
+
+# numcodecs discovers these automatically: get_codec({"id": "interp-ctx", ...}) works without imports
+[project.entry-points."numcodecs.codecs"]

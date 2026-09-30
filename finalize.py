@@ -242,12 +242,23 @@ def write_small(name, r, prev_best):
 # ----------------------------------------------------------------------------
 # ERA5
 # ----------------------------------------------------------------------------
+VERIFIED = HERE / "results_verified"
+VERIFIED.mkdir(exist_ok=True)
+
+
 def verify_era5(args):
+    """Official check + timing of one variable; cached per configuration so
+    that interrupted runs can be resumed."""
     lk, v = args
     try:
         res = json.load(open(HERE / "results" / f"{lk}__{v}.json"))
         if "config" not in res:
             return (lk, v, None)
+        cache_path = VERIFIED / f"{lk}__{v}.json"
+        if cache_path.exists():
+            cached = json.load(open(cache_path))
+            if cached.get("config_used") == res["config"]:
+                return (lk, v, cached["result"])
         x = np.load(HERE / "data/era5" / f"{lk}__{v}.npz")["arr"]
         from compression_requirement_checks import check_safety_requirements
         from search import get_requirements
@@ -262,8 +273,10 @@ def verify_era5(args):
         std = float(x[fin].std()) if fin.any() else 0.0
         nrmse = float(np.sqrt(np.mean(err ** 2)) / std) if std > 0 else 0.0
         maxerr = float(np.abs(err).max()) if err.size else 0.0
-        return (lk, v, dict(cr=cr, ok=ok, te=te, td=td, nbytes=x.nbytes, size=len(e), config=config_str(codec), code=codec_code(codec),
-                            short=res["config_short"], requirements=res["requirements"], nrmse=nrmse, maxerr=maxerr))
+        result = dict(cr=cr, ok=ok, te=te, td=td, nbytes=x.nbytes, size=len(e), config=config_str(codec), code=codec_code(codec),
+                      short=res["config_short"], requirements=res["requirements"], nrmse=nrmse, maxerr=maxerr)
+        json.dump({"config_used": res["config"], "result": result}, open(cache_path, "w"), indent=1, default=str)
+        return (lk, v, result)
     except Exception:
         traceback.print_exc()
         return (lk, v, {"error": traceback.format_exc()})

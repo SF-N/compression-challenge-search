@@ -170,7 +170,7 @@ def run_nan():
     da = ds["wvpa"].sel(time=slice("2020-08-01", "2020-08-07"))
     codec = MaskMetaCodec(
         mask=float("nan"),
-        bitmap_codec=ContextMixingBitmapCodec(mixer_rate=0.005),
+        bitmap_codec=ContextMixingBitmapCodec(mixer_rate=0.003),
         codec=ErrorBoundedQuantizeCodec(codec=ContextMixingSymbolCodec(), eb=1.0),
     )
     direct = None
@@ -190,7 +190,7 @@ def run_pwrel():
     codec = PointwiseRatioErrorBoundedCodec(
         eb_ratio=1.01,
         eb_abs_marker="$eb_abs",
-        log_codec={"id": "eb_quantize", "eb": "$eb_abs", "codec": {"id": "context_mixing.residuals", "mixer_rate": 0.003}},
+        log_codec={"id": "eb_quantize", "eb": "$eb_abs", "codec": {"id": "context_mixing.residuals", "mixer_rate": 0.004}},
         sign_codec={"id": "zstd.rs", "level": 19},
     )
     direct = None
@@ -209,7 +209,7 @@ def run_gradient():
     da = ds["hus"]
     codec = LongitudeGradientCodec(
         eb=1e-6, spacing=0.25, stencil=5, shrink=0.02,
-        codec={"id": "eb_quantize", "eb": "$eb_abs", "codec": {"id": "context_mixing.residuals"}},
+        codec={"id": "eb_quantize", "eb": "$eb_abs", "codec": {"id": "context_mixing.residuals", "mixer_rate": 0.003}},
     )
     direct = None
     e, d, te, td = timed_roundtrip(codec, da.values)

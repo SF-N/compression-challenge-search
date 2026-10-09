@@ -39,7 +39,7 @@ HERE = Path(__file__).parent
 OUT = HERE / "submissions"
 OUT.mkdir(exist_ok=True)
 AUTHOR = "@SF-N"
-REC_VERSION = "0.1.0a2"
+REC_VERSION = "0.1.0b1"
 NOTE = "codecs: SF-N/numcodecs-* packages (clip, chunked, grid-int, eb-quantize, context-mixing, interp-ctx, lon-gradient, abs-or-rel), juntyr/numcodecs-mask (PR #4), numcodecs-replace (ThresholdFilterCodec PR), numcodecs-zero (value PR), numcodecs-pw-ratio"
 
 SMALL_HEADER = [

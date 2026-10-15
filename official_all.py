@@ -43,9 +43,18 @@ if __name__ == "__main__":
     T = r["T"]
     t0 = time.time()
     results = {}
-    with mp.get_context("spawn").Pool(nproc, maxtasksperchild=8) as pool:
-        for t, ok, size in pool.imap_unordered(_check, [(lk, v, t, r["config"]) for t in range(T)]):
+    cache = OUT / f"{lk}__{v}.official.jsonl"
+    if cache.exists():
+        for line in cache.read_text().splitlines():
+            t, ok, size = json.loads(line)
+            results[int(t)] = (ok, size)
+        print(f"resumed {len(results)}/{T} timesteps from {cache.name}", flush=True)
+    todo = [t for t in range(T) if t not in results]
+    with mp.get_context("spawn").Pool(nproc, maxtasksperchild=8) as pool, open(cache, "a") as cf:
+        for t, ok, size in pool.imap_unordered(_check, [(lk, v, t, r["config"]) for t in todo]):
             results[t] = (ok, size)
+            cf.write(json.dumps([t, ok, size]) + "\n")
+            cf.flush()
             print(f"{lk} {v} t={t} official_ok={ok} size={size} ({time.time() - t0:.0f}s)", flush=True)
     oks = [results[t][0] for t in range(T)]
     r["official_ok_all_timesteps"] = all(oks)

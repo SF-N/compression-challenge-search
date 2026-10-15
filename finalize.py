@@ -113,6 +113,7 @@ CLASSES = {
     "zfp.rs": ("numcodecs_wasm_zfp", "Zfp"),
     "zstd.rs": ("numcodecs_wasm_zstd", "Zstd"),
     "lzma": ("numcodecs", "LZMA"),
+    "astype": ("numcodecs", "AsType"),
     "pw_ratio": ("numcodecs_pw_ratio", "PointwiseRatioErrorBoundedCodec"),
 }
 

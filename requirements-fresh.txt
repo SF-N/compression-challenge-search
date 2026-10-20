@@ -1,0 +1,36 @@
+# ---- core: reproduce any workflow cell / submission from the cached arrays ----
+numpy>=2.0
+numba>=0.60
+scipy
+numcodecs==0.15.1
+leb128
+typing_extensions
+openpyxl
+# THE REQUIREMENTS USED EVERYWHERE: compression-recommendations 0.1.0b1.
+# The official checker (compression-requirement-checks) is installed afterwards with
+#     pip install --no-deps compression-requirement-checks==0.1.0a2
+# only because its packaging metadata (released before b1 existed) pins
+# compression-recommendations==0.1.0a2; the checker's code is version-agnostic and
+# all results were verified with exactly this pair (recommendations 0.1.0b1 + checks 0.1.0a2).
+compression-recommendations==0.1.0b1
+# codecs from PyPI (juntyr)
+numcodecs-combinators==0.2.15
+numcodecs-wasm-sperr==0.2.3
+numcodecs-wasm-zstd==0.4.0
+# numcodecs-mask: SF-N fork at the commit the submissions were verified with
+# (nominal MaskAwareCodecMixin, WITHOUT the structural subclass hook added in d8080bc;
+#  the PyPI 0.1.0 release is older and lacks numcodecs_mask.abc)
+numcodecs-mask @ git+https://github.com/SF-N/numcodecs-mask@081b197ddff6259f059c450002e74019c3239fc8
+# numcodecs-pw-ratio: SF-N fork (packed/bitmap sign plane), commit used for the submissions
+numcodecs-pw-ratio @ git+https://github.com/SF-N/numcodecs-pw-ratio@5336c2847994a19ff076d95fc475be646b4e6692
+# SF-N codecs (numba-compiled Python)
+numcodecs-eb-quantize @ git+https://github.com/SF-N/numcodecs-eb-quantize
+numcodecs-context-mixing @ git+https://github.com/SF-N/numcodecs-context-mixing
+numcodecs-interp-ctx @ git+https://github.com/SF-N/numcodecs-interp-ctx
+numcodecs-clip @ git+https://github.com/SF-N/numcodecs-clip
+numcodecs-replace @ git+https://github.com/SF-N/numcodecs-replace
+numcodecs-zero @ git+https://github.com/SF-N/numcodecs-zero
+numcodecs-grid-int @ git+https://github.com/SF-N/numcodecs-grid-int
+numcodecs-chunked @ git+https://github.com/SF-N/numcodecs-chunked
+numcodecs-lon-gradient @ git+https://github.com/SF-N/numcodecs-lon-gradient
+numcodecs-abs-or-rel @ git+https://github.com/SF-N/numcodecs-abs-or-rel

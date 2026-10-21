@@ -38,9 +38,11 @@ numcodecs-abs-or-rel @ git+https://github.com/SF-N/numcodecs-abs-or-rel
 
 # --- data access (era5.py, cache_era5.py, finalize.py small challenges) ---
 xarray
+dask
 pandas
 requests
 h5netcdf
+h5py
 zarr>=3
 kerchunk
 fsspec

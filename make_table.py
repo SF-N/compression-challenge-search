@@ -1,10 +1,10 @@
-"""Write <lk>_workflow_table.xlsx: per variable the submitted best ratio/config
+"""Write <lk>_workflow_table.xlsx (default: tables/ next to this script): per variable the submitted best ratio/config
 (our submissions lead the scoreboard) next to the ratio and parameters of each
 of the four workflows (W1 quantize+context, W2 quantize+interpolation,
 W3 log-relative, W4 SPERR), best of the four in bold. Prints a Markdown
 version for pressure.
 
-Usage: python make_pressure_table.py [pressure|single]
+Usage: python make_table.py [pressure|single] [--out DIR]
 
 Sources: submissions/ERA5-{Pressure,Single}.xlsx (official verified ratios),
 results/<lk>__*.json (stored search candidates) and
@@ -28,7 +28,9 @@ HERE = Path(__file__).parent
 LK = sys.argv[1] if len(sys.argv) > 1 else "pressure"
 SUB = HERE / "submissions" / ("ERA5-Pressure.xlsx" if LK == "pressure" else "ERA5-Single.xlsx")
 CELLS = HERE / f"workflow_cells_official_{LK}.jsonl"
-OUT = HERE.parent.parent / "ERA5_compression_presentation" / f"{LK}_workflow_table.xlsx"
+OUT_DIR = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else HERE / "tables"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+OUT = OUT_DIR / f"{LK}_workflow_table.xlsx"
 
 LOSSLESS = {"lsm", "slt", "tvl", "tvh", "ptype", "cdww", "msqs", "rhoao", "tauoc"}
 

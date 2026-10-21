@@ -13,13 +13,18 @@ OUT = Path(__file__).parent / "data" / "era5"
 OUT.mkdir(parents=True, exist_ok=True)
 
 
-def main(leveltypes):
+def main(args):
+    """cache_era5.py [pressure] [single] [var ...]  - leveltypes, optionally restricted to variables"""
+    leveltypes = [a for a in args if a in ("pressure", "single")] or ["pressure", "single"]
+    only = {a for a in args if a not in ("pressure", "single")}
     for lk in leveltypes:
         catalog = load_era5_catalog(leveltype=lk)
         variables = sorted(
             {v for group in catalog["groups"].values() for v in group["variables"]}
         )
         for v in variables:
+            if only and v not in only:
+                continue
             path = OUT / f"{lk}__{v}.npz"
             if path.exists():
                 continue
@@ -35,4 +40,4 @@ def main(leveltypes):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or ["pressure", "single"])
+    main(sys.argv[1:])

@@ -5,7 +5,7 @@ configuration that produced it, and optionally re-run it.
     cfg = config_for("pressure", "z", "W1")        # best official cell of that workflow
     cfg = cell_to_config(cell_dict, "single", "tp") # any cell record
 
-    cfg = config_from_table("pressure", "z", "W1")  # from the '<W> config (JSON)' column ('submission' also works)
+    cfg = config_from_table("pressure", "z", "W1")  # from tables/<lk>_workflow_table.xlsx (made by make_table.py)
     cfg = config_from_params("single", "avg_esrwe", "W3", "ratio=1+0.01979686908366251 (ebq core)")  # from a parameter string
 
 Command line:
@@ -110,7 +110,7 @@ def config_from_table(lk, var, workflow, path=None):
     """Read the '<workflow> config (JSON)' cell of the xlsx table -> config dict.
     workflow = 'W1'..'W4' or 'submission'."""
     from openpyxl import load_workbook
-    path = path or HERE.parent.parent / "ERA5_compression_presentation" / f"{lk}_workflow_table.xlsx"
+    path = path or HERE / "tables" / f"{lk}_workflow_table.xlsx"
     ws = load_workbook(path).active
     hdr = [c.value for c in ws[1]]
     col = hdr.index("Submission config (JSON)" if workflow == "submission" else f"{workflow} config (JSON)")

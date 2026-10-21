@@ -164,10 +164,29 @@ def codec_code(codec, direct=None):
 # ----------------------------------------------------------------------------
 # small challenges (exact notebook checks)
 # ----------------------------------------------------------------------------
+BUCKET = "https://object-store.os-api.cci1.ecmwf.int/esiwacebucket"
+SMALL_DATA = {  # local name -> path in the challenge bucket
+    "HOAPS_2020-08_6-hourly.nc": "HOAPS/HOAPS_2020-08_6-hourly.nc",
+    "hplp_sfc_regridded_tp_025deg_steps_228_240.nc": "hplp/hplp_sfc_regridded_tp_025deg_steps_228_240.nc",
+    "NextGEMS_regridded_hus_025deg_steps_44_45.nc": "NextGEMS_EW3_ICON_ngc4008/NextGEMS_regridded_hus_025deg_steps_44_45.nc",
+}
+
+
+def small_data(name):
+    """Path of a small-challenge dataset, downloaded from the bucket on first use."""
+    import urllib.request
+    target = HERE / "data" / name
+    if not target.exists():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        print(f"downloading {name} ...", flush=True)
+        urllib.request.urlretrieve(f"{BUCKET}/{SMALL_DATA[name]}", target)
+    return target
+
+
 def run_nan():
     import xarray as xr
 
-    ds = xr.open_dataset(HERE / "data/HOAPS_2020-08_6-hourly.nc", engine="h5netcdf", decode_timedelta=True)
+    ds = xr.open_dataset(small_data("HOAPS_2020-08_6-hourly.nc"), engine="h5netcdf", decode_timedelta=True)
     da = ds["wvpa"].sel(time=slice("2020-08-01", "2020-08-07"))
     codec = MaskMetaCodec(
         mask=float("nan"),
@@ -186,7 +205,7 @@ def run_nan():
 def run_pwrel():
     import xarray as xr
 
-    ds = xr.open_dataset(HERE / "data/hplp_sfc_regridded_tp_025deg_steps_228_240.nc", engine="h5netcdf", decode_timedelta=True)
+    ds = xr.open_dataset(small_data("hplp_sfc_regridded_tp_025deg_steps_228_240.nc"), engine="h5netcdf", decode_timedelta=True)
     da = ds["tp"]
     codec = PointwiseRatioErrorBoundedCodec(
         eb_ratio=1.01,
@@ -206,7 +225,7 @@ def run_pwrel():
 def run_gradient():
     import xarray as xr
 
-    ds = xr.open_dataset(HERE / "data/NextGEMS_regridded_hus_025deg_steps_44_45.nc", engine="h5netcdf", decode_timedelta=True)
+    ds = xr.open_dataset(small_data("NextGEMS_regridded_hus_025deg_steps_44_45.nc"), engine="h5netcdf", decode_timedelta=True)
     da = ds["hus"]
     codec = LongitudeGradientCodec(
         eb=1e-6, spacing=0.25, stencil=5, shrink=0.02,

@@ -9,7 +9,7 @@ import numpy as np
 from numcodecs.registry import get_codec
 
 HERE = Path(__file__).parent
-CW = HERE.parent / "compression-lab-notebooks" / "challenge_work"
+CW = HERE  # data/ and results/ live in this repository
 
 
 def patch_pw_ratio(cfg):

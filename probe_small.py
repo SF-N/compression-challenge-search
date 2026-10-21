@@ -14,7 +14,7 @@ import numpy as np
 from numcodecs.registry import get_codec
 
 HERE = Path(__file__).parent
-CW = HERE.parent / "compression-lab-notebooks" / "challenge_work"
+CW = HERE  # data/ and results/ live in this repository
 sys.path.insert(0, str(CW))
 
 from validate_submissions import load_small  # noqa: E402
